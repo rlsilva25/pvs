@@ -16,8 +16,8 @@ interface ILoginFormValues {
 }
 
 const initialLoginForm: ILoginFormValues = {
-  username: 'kminchelle',
-  password: '0lelplR',
+  username: '12345678910',
+  password: '123',
 }
 
 const LoginFormComponent = () => {

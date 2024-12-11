@@ -1,5 +1,64 @@
-import Image from 'next/image'
+"use client";
 
+import Image from 'next/image'
+import { Session } from 'next-auth'
+
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+
+export default function Home() {
+
+  const { data: session } = useSession();
+  const [apiData, setApiData] = useState(null); // Estado para armazenar os dados da API
+  const [error, setError] = useState(null); // Estado para armazenar erros
+
+  console.log(session);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!session?.user?.token) return; // Certifique-se de que o token está disponível
+
+      try {
+        const response = await fetch("http://127.0.0.1:8082/vps/vendas/cliente/20608179949", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${session.user.token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Erro ao buscar dados da API");
+        }
+
+        const data = await response.json();
+        setApiData(data); // Armazena os dados no estado
+      } catch (err) {
+        setError(err.message); // Armazena o erro no estado
+      }
+    };
+
+    fetchData();
+  }, [session?.user?.token]); // Executa sempre que o token mudar
+  
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <div className="w-full text-sm lg:flex">
+        {apiData ? (
+          <div>
+            <h2>Dados do Endpoint:</h2>
+            <pre>{JSON.stringify(apiData, null, 2)}</pre> {/* Exibe os dados formatados */}
+          </div>
+        ) : error ? (
+          <p className="text-red-500">Erro: {error}</p> // Exibe mensagem de erro
+        ) : (
+          <p>Carregando dados...</p>
+        )}
+      </div>
+    </main>
+  )
+}
+
+/*
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -111,3 +170,4 @@ export default function Home() {
     </main>
   )
 }
+*/
