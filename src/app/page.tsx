@@ -4,6 +4,8 @@ import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+import { Button, Grid, Stack } from "@mui/material";
+
 export default function Home() {
   const { data: session } = useSession()
   const [apiData, setApiData] = useState(null) // Estado para armazenar os dados da API
@@ -75,6 +77,9 @@ export default function Home() {
         >
           Sair
         </button>
+
+        <Button variant="text">Text</Button>
+        
       </div>
     </main>
   )
