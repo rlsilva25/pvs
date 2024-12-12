@@ -19,7 +19,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!session?.token) return // Certifique-se de que o token está disponível
+      if (!session?.user?.token) return // Certifique-se de que o token está disponível
 
       try {
         const response = await fetch(
@@ -27,7 +27,7 @@ export default function Home() {
           {
             method: 'GET',
             headers: {
-              Authorization: `Bearer ${session.token}`,
+              Authorization: `Bearer ${session.user.token}`,
             },
           }
         )
@@ -50,7 +50,7 @@ export default function Home() {
     }
 
     fetchData()
-  }, [session?.token, rootUrl, router]) // Executa sempre que o token mudar
+  }, [session?.user?.token, rootUrl, router]) // Executa sempre que o token mudar
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

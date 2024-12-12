@@ -13,6 +13,7 @@ declare module 'next-auth' {
       tokenExpires: number
     }
     user: {
+      token: string,
       id: number
       email: string
       provider: string
