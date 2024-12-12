@@ -26,6 +26,9 @@ export const login = (payload: ILogin) => {
 export const getUserInfo = (headers: IUserInfoHeaders) => {
   return ApiClient.get(`/auth/me`, headers)
 }
+export const getClienteInfo = (headers: IUserInfoHeaders) => {
+  return ApiClient.get(`/cliente`, headers)
+}
 
 export const refreshToken = (
   payload: IRefreshTokenBody,

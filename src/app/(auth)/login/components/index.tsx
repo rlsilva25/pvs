@@ -29,12 +29,12 @@ const LoginFormComponent = () => {
   React.useEffect(() => {
     if (errorMessage) {
       alert(
-        'error' + 'Login Error' + errorMessage
+        'error' + 'Erro no Login' + errorMessage
         // 'Please check your email and password and try again. If you are still having trouble, please contact support.'
       )
     }
     if (successMessage) {
-      alert('success' + 'Login Success' + successMessage)
+      alert('success' + 'Logado com sucesso' + successMessage)
     }
   }, [errorMessage, successMessage])
 
@@ -55,8 +55,8 @@ const LoginFormComponent = () => {
   return (
     <div className="flex items-center h-screen w-full">
       <div className="w-full bg-white rounded shadow-lg p-8 m-4 md:max-w-sm md:mx-auto">
-        <span className="block w-full text-xl uppercase font-bold mb-4">
-          Login
+        <span className="block w-full text-xl font-bold mb-4">
+          Entre com seu CPF
         </span>
         <Formik
           initialValues={initialLoginForm}
@@ -85,7 +85,7 @@ const LoginFormComponent = () => {
             <Form onSubmit={handleSubmit} className="mb-4">
               <div className="mb-4 md:w-full">
                 <label htmlFor="email" className="block text-xs mb-1">
-                  Username or Email
+                  CPF
                 </label>
                 <input
                   className="w-full border rounded p-2 outline-none focus:shadow-outline"
@@ -103,7 +103,7 @@ const LoginFormComponent = () => {
               </div>
               <div className="mb-6 md:w-full">
                 <label htmlFor="password" className="block text-xs mb-1">
-                  Password
+                  Senha
                 </label>
                 <input
                   className="w-full border rounded p-2 outline-none focus:shadow-outline"
@@ -122,13 +122,13 @@ const LoginFormComponent = () => {
                 disabled={!isValid}
                 className="bg-green-500 hover:bg-green-700 text-white uppercase text-sm font-semibold px-4 py-2 rounded"
               >
-                Login
+                Entrar
               </button>
             </Form>
           )}
         </Formik>
-        <a className="text-blue-700 text-center text-sm" href="/login">
-          Forgot password?
+        <a className="text-blue-700 text-center text-sm hide" href="/login">
+          Esqueceu a senha?
         </a>
       </div>
     </div>

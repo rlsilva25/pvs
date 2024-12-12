@@ -3,8 +3,9 @@
 import Image from 'next/image'
 import { Session } from 'next-auth'
 
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 
@@ -12,7 +13,13 @@ export default function Home() {
   const [apiData, setApiData] = useState(null); // Estado para armazenar os dados da API
   const [error, setError] = useState(null); // Estado para armazenar erros
 
-  console.log(session);
+  const router = useRouter();
+
+  const rootUrl = `http://localhost:3000/`;
+
+  //console.log(process.env.NEXTAUTH_URL);
+
+  //console.log(session);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,7 +34,12 @@ export default function Home() {
         });
 
         if (!response.ok) {
-          throw new Error("Erro ao buscar dados da API");
+
+          signOut({ redirect: false }).then(() =>
+            router.push(rootUrl),
+          )
+
+          throw new Error("Erro ao buscar dados da API!");
         }
 
         const data = await response.json();
@@ -39,10 +51,11 @@ export default function Home() {
 
     fetchData();
   }, [session?.user?.token]); // Executa sempre que o token mudar
-  
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="w-full text-sm lg:flex">
+
         {apiData ? (
           <div>
             <h2>Dados do Endpoint:</h2>
@@ -53,6 +66,18 @@ export default function Home() {
         ) : (
           <p>Carregando dados...</p>
         )}
+
+        <button
+          className="bg-green-500 hover:bg-green-700 text-white uppercase text-sm font-semibold px-4 py-2 rounded"
+          onClick={() =>
+            signOut({ redirect: false }).then(() =>
+              router.push(rootUrl),
+            )
+          }
+        >
+          Sair
+        </button>
+
       </div>
     </main>
   )

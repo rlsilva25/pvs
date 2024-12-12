@@ -20,6 +20,7 @@
     "eslint-plugin-unused-imports": "^3.1.0",
     "next": "14.1.4",
     "next-auth": "^4.24.7",
+    "next-auth-ts-boilerplate": "file:",
     "prettier": "^3.2.5",
     "react": "^18",
     "react-dom": "^18",
