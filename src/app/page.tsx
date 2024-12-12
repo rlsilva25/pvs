@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 export default function Home() {
   const { data: session } = useSession()
   const [apiData, setApiData] = useState(null) // Estado para armazenar os dados da API
-  const [error, setError] = useState(null) // Estado para armazenar erros
+  const [error, setError] = useState<string | null>(null) // Estado para armazenar erros
 
   const router = useRouter()
 
@@ -19,7 +19,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!session?.user?.token) return // Certifique-se de que o token está disponível
+      if (!session?.token) return // Certifique-se de que o token está disponível
 
       try {
         const response = await fetch(
@@ -27,7 +27,7 @@ export default function Home() {
           {
             method: 'GET',
             headers: {
-              Authorization: `Bearer ${session.user.token}`,
+              Authorization: `Bearer ${session.token}`,
             },
           }
         )
@@ -41,12 +41,16 @@ export default function Home() {
         const data = await response.json()
         setApiData(data) // Armazena os dados no estado
       } catch (err) {
-        setError(err.message) // Armazena o erro no estado
+        if (err instanceof Error) {
+          setError(err.message) // Armazena o erro no estado
+        } else {
+          setError('Erro desconhecido') // Mensagem de erro genérica
+        }
       }
     }
 
     fetchData()
-  }, [session?.user?.token]) // Executa sempre que o token mudar
+  }, [session?.token, rootUrl, router]) // Executa sempre que o token mudar
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
