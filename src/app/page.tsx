@@ -1,21 +1,17 @@
-"use client";
+'use client'
 
-import Image from 'next/image'
-import { Session } from 'next-auth'
-
-import { useSession, signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSession, signOut } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+  const { data: session } = useSession()
+  const [apiData, setApiData] = useState(null) // Estado para armazenar os dados da API
+  const [error, setError] = useState(null) // Estado para armazenar erros
 
-  const { data: session } = useSession();
-  const [apiData, setApiData] = useState(null); // Estado para armazenar os dados da API
-  const [error, setError] = useState(null); // Estado para armazenar erros
+  const router = useRouter()
 
-  const router = useRouter();
-
-  const rootUrl = `http://localhost:3000/`;
+  const rootUrl = `http://localhost:3000/`
 
   //console.log(process.env.NEXTAUTH_URL);
 
@@ -23,43 +19,43 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!session?.user?.token) return; // Certifique-se de que o token está disponível
+      if (!session?.user?.token) return // Certifique-se de que o token está disponível
 
       try {
-        const response = await fetch("http://127.0.0.1:8082/vps/vendas/cliente/20608179949", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${session.user.token}`,
-          },
-        });
+        const response = await fetch(
+          'http://127.0.0.1:8082/vps/vendas/cliente/20608179949',
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${session.user.token}`,
+            },
+          }
+        )
 
         if (!response.ok) {
+          signOut({ redirect: false }).then(() => router.push(rootUrl))
 
-          signOut({ redirect: false }).then(() =>
-            router.push(rootUrl),
-          )
-
-          throw new Error("Erro ao buscar dados da API!");
+          throw new Error('Erro ao buscar dados da API!')
         }
 
-        const data = await response.json();
-        setApiData(data); // Armazena os dados no estado
+        const data = await response.json()
+        setApiData(data) // Armazena os dados no estado
       } catch (err) {
-        setError(err.message); // Armazena o erro no estado
+        setError(err.message) // Armazena o erro no estado
       }
-    };
+    }
 
-    fetchData();
-  }, [session?.user?.token]); // Executa sempre que o token mudar
+    fetchData()
+  }, [session?.user?.token]) // Executa sempre que o token mudar
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="w-full text-sm lg:flex">
-
         {apiData ? (
           <div>
             <h2>Dados do Endpoint:</h2>
-            <pre>{JSON.stringify(apiData, null, 2)}</pre> {/* Exibe os dados formatados */}
+            <pre>{JSON.stringify(apiData, null, 2)}</pre>{' '}
+            {/* Exibe os dados formatados */}
           </div>
         ) : error ? (
           <p className="text-red-500">Erro: {error}</p> // Exibe mensagem de erro
@@ -70,14 +66,11 @@ export default function Home() {
         <button
           className="bg-green-500 hover:bg-green-700 text-white uppercase text-sm font-semibold px-4 py-2 rounded"
           onClick={() =>
-            signOut({ redirect: false }).then(() =>
-              router.push(rootUrl),
-            )
+            signOut({ redirect: false }).then(() => router.push(rootUrl))
           }
         >
           Sair
         </button>
-
       </div>
     </main>
   )
